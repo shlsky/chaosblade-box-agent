@@ -59,7 +59,6 @@ func ExecScript(ctx context.Context, script, args string) (string, string, bool)
 	} else {
 		cmd = exec.CommandContext(ctx, "/bin/sh", "-c", script+" "+args)
 	}
-
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return string(output), err.Error(), false

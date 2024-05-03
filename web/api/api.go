@@ -62,6 +62,12 @@ func (api *API) Register(transportClient *transport.TransportClient, k8sInstance
 		return err
 	}
 
+	//script
+	scriptHandler := NewServerRequestHandler(handler.NewScriptHandler(transportClient))
+	if err := api.RegisterHandler("script", scriptHandler); err != nil {
+		return err
+	}
+
 	// litmus
 	litmuschaosHandler := NewServerRequestHandler(litmuschaos.NewLitmusChaosHandler(transportClient, k8sInstance))
 	if err := api.RegisterHandler("litmuschaos", litmuschaosHandler); err != nil {
