@@ -44,9 +44,9 @@ func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response 
 	installPath := request.Params["installPath"]
 	scriptType := request.Params["type"]
 
-	fileName := "fff.py"
+	fileName := "fff.sh"
 	if scriptType == "python" {
-		fileName = "fff.sh"
+		fileName = "fff.py"
 	}
 
 	os.WriteFile(fileName, []byte(content), 0777)

@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a6002dcc-d6bf-42ab-8ef9-2da15f8f51ff" name="Default Changelist" comment="delete external ip to box">
-      <change afterPath="$PROJECT_DIR$/web/handler/scriptHandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/handler/scriptHandler_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/bash/bash.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/bash/bash.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/api/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/web/api/api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/handler/scriptHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/web/handler/scriptHandler.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +53,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
+    "Go Test.TestSaveProtoSet in github.com/chaosblade-io/chaos-agent/web/handler.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
@@ -324,6 +321,21 @@
           <url>file://$PROJECT_DIR$/web/handler/uninstallAgent.go</url>
           <line>44</line>
           <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/web/handler/scriptHandler_test.go</url>
+          <line>11</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/web/handler/scriptHandler.go</url>
+          <line>40</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/web/handler/scriptHandler.go</url>
+          <line>64</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
