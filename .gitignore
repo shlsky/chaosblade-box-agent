@@ -9,7 +9,7 @@ _test
 .vagrant
 releases
 tmp
-.idea/*
+.idea/
 .vscode/
 # Architecture specific extensions/prefixes
 trace.out
