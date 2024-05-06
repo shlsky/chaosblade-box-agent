@@ -11,9 +11,9 @@ func TestSaveProtoSet(t *testing.T) {
 	handler := NewScriptHandler(nil)
 	r := handler.Handle(&transport.Request{
 		Params: map[string]string{
-			"content":     "print('a')",
-			"installPath": "/usr/local/bin/python3",
-			"type":        "python",
+			"content":     "sleep 120",
+			"installPath": "/bin/bash",
+			"type":        "sh",
 		},
 	})
 	fmt.Println(r)

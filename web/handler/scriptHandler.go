@@ -18,6 +18,7 @@ package handler
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"os"
 	"os/exec"
 	"time"
@@ -44,10 +45,14 @@ func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response 
 	installPath := request.Params["installPath"]
 	scriptType := request.Params["type"]
 
-	fileName := "fff.sh"
+	fileName := uuid.New().String()
+	fileName += ".sh"
 	if scriptType == "python" {
-		fileName = "fff.py"
+		fileName += ".py"
 	}
+	defer func() {
+		os.Remove(fileName)
+	}()
 
 	os.WriteFile(fileName, []byte(content), 0777)
 
@@ -62,7 +67,8 @@ func ExecScript(ctx context.Context, installPath, script string) *transport.Resp
 	}
 	// 这里需要区分windows || linux || darwin
 	var cmd *exec.Cmd = exec.CommandContext(ctx, installPath, script)
-	output, err := cmd.CombinedOutput()
+	err := cmd.Start()
+	//output, err := cmd.CombinedOutput()
 
 	// 2. exec uninstall command
 	if err != nil {
@@ -70,5 +76,5 @@ func ExecScript(ctx context.Context, installPath, script string) *transport.Resp
 		return transport.ReturnFail(transport.CtlExecFailed, err.Error())
 	}
 
-	return transport.ReturnSuccessWithResult(string(output))
+	return transport.ReturnSuccessWithResult("success")
 }
