@@ -8,6 +8,8 @@ require (
 	github.com/deislabs/oras v0.11.1
 	github.com/docker/distribution v2.8.1+incompatible
 	github.com/docker/go-units v0.5.0
+	github.com/go-cmd/cmd v1.4.2
+	github.com/google/uuid v1.3.0
 	github.com/gosuri/uitable v0.0.4
 	github.com/litmuschaos/chaos-operator v0.0.0-20230420075054-3a5f576c5b22
 	github.com/opencontainers/go-digest v1.0.0
@@ -39,6 +41,7 @@ require (
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/Microsoft/hcsshim v0.8.14 // indirect
 	github.com/Shopify/logrus-bugsnag v0.0.0-20171204204709-577dee27f20d // indirect
+	github.com/alitto/pond v1.8.3 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bshuster-repo/logrus-logstash-hook v1.0.0 // indirect
@@ -77,7 +80,6 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20180305231024-9cad4c3443a7 // indirect

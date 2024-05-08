@@ -15,3 +15,5 @@ tmp
 trace.out
 *.out
 .DS_Store
+build/chaos/agent
+chaosagent.tar.gz

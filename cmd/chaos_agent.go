@@ -18,9 +18,12 @@ package main
 
 import (
 	"bytes"
+	"github.com/alitto/pond"
+	"github.com/chaosblade-io/chaos-agent/web/handler"
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/sirupsen/logrus"
 
@@ -46,6 +49,8 @@ var pidFile = "/var/run/chaos.pid"
 func main() {
 	options.NewOptions()
 	log.InitLog(&options.Opts.LogConfig)
+	handler.HandlerWorkerPool = pond.New(100, 1000, pond.IdleTimeout(60*time.Second))
+	defer handler.HandlerWorkerPool.StopAndWaitFor(time.Second * 5)
 
 	options.Opts.SetOthersByFlags()
 

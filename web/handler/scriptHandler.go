@@ -18,19 +18,19 @@ package handler
 
 import (
 	"context"
+	"github.com/alitto/pond"
+	"github.com/chaosblade-io/chaos-agent/transport"
 	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
-	"time"
-
-	"github.com/sirupsen/logrus"
-
-	"github.com/chaosblade-io/chaos-agent/transport"
 )
 
 type ScriptHandler struct {
 	transportClient *transport.TransportClient
 }
+
+var HandlerWorkerPool *pond.WorkerPool
 
 func NewScriptHandler(transportClient *transport.TransportClient) *ScriptHandler {
 	return &ScriptHandler{
@@ -40,7 +40,6 @@ func NewScriptHandler(transportClient *transport.TransportClient) *ScriptHandler
 
 func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response {
 	logrus.Info("Receive server run script request")
-
 	content := request.Params["content"]
 	installPath := request.Params["installPath"]
 	scriptType := request.Params["type"]
@@ -50,9 +49,6 @@ func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response 
 	if scriptType == "python" {
 		fileName += ".py"
 	}
-	defer func() {
-		os.Remove(fileName)
-	}()
 
 	os.WriteFile(fileName, []byte(content), 0777)
 
@@ -60,20 +56,25 @@ func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response 
 }
 
 func ExecScript(ctx context.Context, installPath, script string) *transport.Response {
-	newCtx, cancel := context.WithTimeout(ctx, 60*time.Second)
-	defer cancel()
-	if ctx == context.Background() {
-		ctx = newCtx
-	}
-	// 这里需要区分windows || linux || darwin
-	var cmd *exec.Cmd = exec.CommandContext(ctx, installPath, script)
-	err := cmd.Start()
-	//output, err := cmd.CombinedOutput()
 
-	// 2. exec uninstall command
-	if err != nil {
-		logrus.Warningf(transport.Errors[transport.CtlExecFailed], err)
-		return transport.ReturnFail(transport.CtlExecFailed, err.Error())
+	logrus.Info("async run script")
+	suc := HandlerWorkerPool.TrySubmit(func() {
+
+		defer os.Remove(script)
+		// 这里需要区分windows || linux || darwin
+		var cmd *exec.Cmd = exec.Command(installPath, script)
+		err := cmd.Run()
+		if err != nil {
+			logrus.Warningf(transport.Errors[transport.CtlExecFailed], err)
+		}
+	})
+	// 这里需要区分windows || linux || darwin
+	//var cmd *exec.Cmd = exec.Command(installPath, script)
+	//err := cmd.Run()
+	////output, err := cmd.CombinedOutput()
+	//// 2. exec uninstall command
+	if !suc {
+		return transport.ReturnFail(transport.CtlExecFailed, "The worker pool refused to submit")
 	}
 
 	return transport.ReturnSuccessWithResult("success")
