@@ -32,9 +32,9 @@ type ScriptHandler struct {
 }
 
 type AgentScriptResult struct {
-	Output   string
-	ErrMsg   string
-	ExitCode int
+	Output   string `json:"output,omitempty"`
+	ErrMsg   string `json:"errMsg,omitempty"`
+	ExitCode int    `json:"exitCode,omitempty"`
 }
 
 var HandlerWorkerPool *pond.WorkerPool
