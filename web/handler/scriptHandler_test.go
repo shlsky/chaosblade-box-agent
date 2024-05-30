@@ -15,7 +15,7 @@ func TestSaveProtoSet(t *testing.T) {
 	handler := NewScriptHandler(nil)
 	r := handler.Handle(&transport.Request{
 		Params: map[string]string{
-			"content":     "ps -ef | grep \"nc -l 9999\" | grep -v grep | awk '{ print $2 }'  | xargs kill -9\n sleep 20\n touch aaa.txt",
+			"content":     "ps -ef | grep \"nc -l 9999\" | grep -v grep | awk '{ print $2 }'  | xargs kill -9\n sleep 1\n cat aasssa.txt\n exit 2",
 			"installPath": "/bin/bash",
 			"type":        "sh",
 		},

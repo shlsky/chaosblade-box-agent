@@ -24,10 +24,17 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
+	"time"
 )
 
 type ScriptHandler struct {
 	transportClient *transport.TransportClient
+}
+
+type AgentScriptResult struct {
+	Output   string
+	ErrMsg   string
+	ExitCode int
 }
 
 var HandlerWorkerPool *pond.WorkerPool
@@ -52,30 +59,54 @@ func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response 
 
 	os.WriteFile(fileName, []byte(content), 0777)
 
-	return ExecScript(context.Background(), installPath, fileName)
+	return ExecScript(context.Background(), installPath, fileName, false)
 }
 
-func ExecScript(ctx context.Context, installPath, script string) *transport.Response {
+func ExecScript(ctx context.Context, installPath, script string, async bool) *transport.Response {
 
-	logrus.Info("async run script")
-	suc := HandlerWorkerPool.TrySubmit(func() {
-
-		defer os.Remove(script)
-		// 这里需要区分windows || linux || darwin
-		var cmd *exec.Cmd = exec.Command(installPath, script)
-		err := cmd.Run()
-		if err != nil {
-			logrus.Warningf(transport.Errors[transport.CtlExecFailed], err)
-		}
-	})
-	// 这里需要区分windows || linux || darwin
-	//var cmd *exec.Cmd = exec.Command(installPath, script)
-	//err := cmd.Run()
-	////output, err := cmd.CombinedOutput()
-	//// 2. exec uninstall command
-	if !suc {
-		return transport.ReturnFail(transport.CtlExecFailed, "The worker pool refused to submit")
+	timeout := 60 * time.Second
+	newCtx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+	if ctx == context.Background() {
+		ctx = newCtx
 	}
 
-	return transport.ReturnSuccessWithResult("success")
+	if !async {
+		defer os.Remove(script)
+		// 这里需要区分windows || linux || darwin
+		var cmd *exec.Cmd = exec.CommandContext(ctx, installPath, script)
+		cmd.WaitDelay = timeout
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			transport.ReturnFail(int32(cmd.ProcessState.ExitCode()), err.Error())
+		}
+		return transport.ReturnSuccessWithResult(AgentScriptResult{
+			Output:   string(output),
+			ErrMsg:   "",
+			ExitCode: cmd.ProcessState.ExitCode(),
+		})
+	} else {
+		logrus.Info("async run script")
+		suc := HandlerWorkerPool.TrySubmit(func() {
+
+			defer os.Remove(script)
+			// 这里需要区分windows || linux || darwin
+			var cmd *exec.Cmd = exec.Command(installPath, script)
+			err := cmd.Run()
+			if err != nil {
+				logrus.Warningf(transport.Errors[transport.CtlExecFailed], err)
+			}
+		})
+		// 这里需要区分windows || linux || darwin
+		//var cmd *exec.Cmd = exec.Command(installPath, script)
+		//err := cmd.Run()
+		////output, err := cmd.CombinedOutput()
+		//// 2. exec uninstall command
+		if !suc {
+			return transport.ReturnFail(transport.CtlExecFailed, "The worker pool refused to submit")
+		}
+
+		return transport.ReturnSuccessWithResult("0")
+	}
+
 }
