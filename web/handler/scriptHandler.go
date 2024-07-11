@@ -95,6 +95,7 @@ func ExecScript(ctx context.Context, installPath, script string, async bool) *tr
 		logrus.Info("async run script")
 		suc := HandlerWorkerPool.TrySubmit(func() {
 
+			logrus.Info("async script start run")
 			defer os.Remove(script)
 			// 这里需要区分windows || linux || darwin
 			var cmd *exec.Cmd = exec.Command(installPath, script)
