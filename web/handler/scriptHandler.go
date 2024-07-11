@@ -24,6 +24,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 )
 
@@ -50,6 +51,11 @@ func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response 
 	content := request.Params["content"]
 	installPath := request.Params["installPath"]
 	scriptType := request.Params["type"]
+	async, ok := request.Params["async"]
+	isAsync := false
+	if ok {
+		isAsync = strings.ToLower(async) == "true"
+	}
 
 	fileName := uuid.New().String()
 	fileName += ".sh"
@@ -59,7 +65,7 @@ func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response 
 
 	os.WriteFile(fileName, []byte(content), 0777)
 
-	return ExecScript(context.Background(), installPath, fileName, false)
+	return ExecScript(context.Background(), installPath, fileName, isAsync)
 }
 
 func ExecScript(ctx context.Context, installPath, script string, async bool) *transport.Response {

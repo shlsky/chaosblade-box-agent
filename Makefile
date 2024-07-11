@@ -1,6 +1,6 @@
 .PHONE: build clean
 export AGENT_VERSION = 1.0.3
-export BLADE_VERSION = 1.7.2
+export BLADE_VERSION = 1.7.3
 
 BLADE_SRC_ROOT=$(shell pwd)
 
