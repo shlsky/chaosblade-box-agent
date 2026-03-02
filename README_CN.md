@@ -47,3 +47,7 @@ make build_linux
 ## 开源许可证
 Chaosblade-exec-os 遵循 Apache 2.0 许可证，详细内容请阅读 [LICENSE](LICENSE)
 
+38736  docker login
+38737  docker tag docker.io/chaosbladeio/chaosblade-agent:1.0.3 dutshl1990/chaosblade-box-agent:1.0.3
+38738  docker commit init_first dutshl1990/chaosblade-box-agent:1.0.3
+38739  docker run dutshl1990/chaosblade-box-agent:1.0.3

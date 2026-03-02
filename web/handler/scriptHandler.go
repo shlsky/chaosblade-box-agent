@@ -62,10 +62,11 @@ func (ph *ScriptHandler) Handle(request *transport.Request) *transport.Response 
 	if scriptType == "python" {
 		fileName += ".py"
 	}
+	dir, _ := os.Getwd()
 
 	os.WriteFile(fileName, []byte(content), 0777)
 
-	return ExecScript(context.Background(), installPath, fileName, isAsync)
+	return ExecScript(context.Background(), installPath, dir+"/"+fileName, isAsync)
 }
 
 func ExecScript(ctx context.Context, installPath, script string, async bool) *transport.Response {
@@ -80,8 +81,9 @@ func ExecScript(ctx context.Context, installPath, script string, async bool) *tr
 	if !async {
 		defer os.Remove(script)
 		// 这里需要区分windows || linux || darwin
-		var cmd *exec.Cmd = exec.CommandContext(ctx, installPath, script)
-		cmd.WaitDelay = timeout
+		var cmd *exec.Cmd = exec.Command(installPath, "-c", script)
+		//cmd.WaitDelay = timeout
+
 		output, err := cmd.CombinedOutput()
 		if err != nil {
 			transport.ReturnFail(int32(cmd.ProcessState.ExitCode()), err.Error())

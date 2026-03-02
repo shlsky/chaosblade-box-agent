@@ -31,7 +31,7 @@ func TestSync(t *testing.T) {
 	handler := NewScriptHandler(nil)
 	r := handler.Handle(&transport.Request{
 		Params: map[string]string{
-			"content":     "nc -l 9999",
+			"content":     "nohup nc -l 9999 > /dev/null 2>&1 &",
 			"installPath": "/bin/bash",
 			"type":        "sh",
 		},
